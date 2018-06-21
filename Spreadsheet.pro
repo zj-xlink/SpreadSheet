@@ -21,3 +21,6 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 HEADERS += \
     mainwindow.h
+
+RESOURCES += \
+    res.qrc

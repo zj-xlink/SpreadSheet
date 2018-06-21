@@ -4,6 +4,7 @@
 #include <QMainWindow>
 
 class QAction;
+class QMenu;
 
 class MainWindow : public QMainWindow
 {
@@ -20,11 +21,18 @@ private slots:
     void newFile();
     void open();
     bool save();
+    bool saveAs();
 
 private:
+    void createActions();
+    void createMenus();
+
     QAction *newAction;
     QAction *openAction;
     QAction *saveAction;
+    QAction *saveAsAction;
+
+    QMenu *fileMenu;
 };
 
 #endif // MAINWINDOW_H
