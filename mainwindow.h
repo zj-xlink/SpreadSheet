@@ -6,6 +6,9 @@
 class QAction;
 class QMenu;
 class QToolBar;
+class SpreadSheet;
+class QLabel;
+
 
 class MainWindow : public QMainWindow
 {
@@ -28,8 +31,10 @@ private slots:
     void cut();
     void copy();
 
+    void findCell();
 
     void openRecentFiles();
+
 
 
 private:
@@ -40,6 +45,13 @@ private:
     void createStatusBar();
 
     void readSettings();
+    void writeSettings();
+    bool loadFile(QString fileName);
+    bool saveFile(QString fileName);
+    void setCurrentFile(const QString &fileName);
+    QString strippedName(const QString &fullFileName);
+    void updateRecentFileActions();
+    bool okToContinue();
 
     QAction *separatorAction;
     QAction *newAction;
@@ -78,6 +90,13 @@ private:
 
     QToolBar *fileToolBar;
     QToolBar *editToolBar;
+
+    SpreadSheet *spreadsheet;
+    QLabel *locationLabel;
+    QLabel *formulaLabel;
+
+    QString curFile;
+    QStringList recentFiles;
 };
 
 #endif // MAINWINDOW_H

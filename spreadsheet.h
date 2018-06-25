@@ -8,7 +8,10 @@ class SpreadSheet :public QTableWidget
     Q_OBJECT
 
 public:
-    SpreadSheet(QWidget *parent = 0);
+    explicit SpreadSheet(QWidget *parent = 0);
+
+    bool readFile(QString fileName);
+    bool writeFile(QString fileName);
 
 protected:
 
