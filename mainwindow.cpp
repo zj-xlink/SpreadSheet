@@ -340,10 +340,13 @@ bool MainWindow::okToContinue()
 
 void MainWindow::newFile()
 {
-    if(okToContinue()){
-        spreadsheet->clear();
-        setCurrentFile("");
-    }
+    //if(okToContinue()){
+       // spreadsheet->clear();
+       // setCurrentFile("");
+
+        MainWindow *main = new MainWindow;
+        main->show();
+   // }
 }
 
 bool MainWindow::loadFile(QString fileName)
