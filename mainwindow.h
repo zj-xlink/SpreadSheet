@@ -8,13 +8,14 @@ class QMenu;
 class QToolBar;
 class SpreadSheet;
 class QLabel;
-
+class FindDialog;
 
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
 public:
     explicit MainWindow(QWidget *parent = 0);
+    ~MainWindow();
 
 protected:
     void closeEvent(QCloseEvent *event);
@@ -32,6 +33,7 @@ private slots:
     void copy();
 
     void findCell();
+    void gotoCell();
 
     void openRecentFiles();
 
@@ -97,6 +99,8 @@ private:
 
     QString curFile;
     QStringList recentFiles;
+
+    FindDialog *findDlg;
 };
 
 #endif // MAINWINDOW_H

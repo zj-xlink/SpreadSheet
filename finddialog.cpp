@@ -10,6 +10,10 @@
 FindDialog::FindDialog(QWidget *parent)
     :QDialog(parent)
 {
+    QSize sz = sizeHint();
+    setMinimumSize(sz);
+    setMaximumSize(sz);
+
     findLabel = new QLabel(tr("Find What:"));
     lineEdit = new QLineEdit;
     findLabel->setBuddy(lineEdit);
@@ -56,11 +60,7 @@ FindDialog::FindDialog(QWidget *parent)
 
 void FindDialog::enableFind(const QString &str)
 {
-    if(str.isEmpty()){
-        findButton->setEnabled(false);
-    }else{
-        findButton->setEnabled(true);
-    }
+    findButton->setEnabled(!str.isEmpty());
 }
 
 void FindDialog::closeWindow()
@@ -70,5 +70,14 @@ void FindDialog::closeWindow()
 
 void FindDialog::find()
 {
+    QString text = lineEdit->text();
+    Qt::CaseSensitivity cs= matchBox->isChecked()?Qt::CaseSensitive
+            : Qt::CaseInsensitive;
+
+    if(searchBox->isChecked()){
+        emit findPrevious(text, cs);
+    }else{
+        emit findNext(text, cs);
+    }
 
 }

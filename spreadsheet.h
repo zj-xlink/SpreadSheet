@@ -18,6 +18,8 @@ protected:
 signals:
 
 private slots:
+    void findPrevious(const QString&str, Qt::CaseSensitivity cs);
+    void findNext(const QString&str, Qt::CaseSensitivity cs);
 
 private:
 

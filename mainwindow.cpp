@@ -11,9 +11,12 @@
 #include <QCloseEvent>
 #include <QFileDialog>
 #include <QMutableStringListIterator>
+#include <QLineEdit>
+#include <QSettings>
 
 #include "spreadsheet.h"
 #include "finddialog.h"
+#include "gotocelldialog.h"
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 {
@@ -29,8 +32,14 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 
     readSettings();
 
+    findDlg = 0;
+
     setWindowIcon(QIcon(":/image/new"));
 
+}
+MainWindow::~MainWindow()
+{
+    writeSettings();
 }
 
 void MainWindow::createActions()
@@ -120,7 +129,7 @@ void MainWindow::createActions()
     gotocellAction->setIcon(QIcon(":/image/new"));
     gotocellAction->setShortcut(QKeySequence(tr("Ctrl+G")));
     gotocellAction->setStatusTip(tr("定位单元"));
-    connect(gotocellAction,SIGNAL(triggered()),this,SLOT(copy()));
+    connect(gotocellAction,SIGNAL(triggered()),this,SLOT(gotoCell()));
 
 
     reCalAction = new QAction(tr("重新计算(&R)"), this);
@@ -240,11 +249,24 @@ void MainWindow::createStatusBar()
 
 void MainWindow::readSettings()
 {
+    QSettings settings("Software Inc.", "SpreadSheet");
+
+    restoreGeometry(settings.value("geometry").toByteArray());
+
+    recentFiles = settings.value("recentFiles").toStringList();
+    updateRecentFileActions();
+
+    showgridAction->setChecked(settings.value("showGrid").toBool());
+    reCalAction->setChecked(settings.value("autoRecalc").toBool());
 
 }
 void MainWindow::writeSettings()
 {
-
+    QSettings settings("Software Inc.", "SpreadSheet");
+    settings.setValue("geometry", saveGeometry());
+    settings.setValue("recentFiles", recentFiles);
+    settings.setValue("showGrid", showgridAction->isChecked());
+    settings.setValue("autoRecalc", reCalAction->isChecked());
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)
@@ -404,6 +426,26 @@ void MainWindow::openRecentFiles()
 
 void MainWindow::findCell()
 {
-    FindDialog *dlg = new FindDialog(this);
-    dlg->exec();
+    if(!findDlg){
+        findDlg = new FindDialog(this);
+        connect(findDlg, SIGNAL(findPrevious(QString,Qt::CaseSensitivity)),
+                spreadsheet, SLOT(findPrevious(QString,Qt::CaseSensitivity)));
+        connect(findDlg, SIGNAL(findPrevious(QString,Qt::CaseSensitivity)),
+                spreadsheet, SLOT(findPrevious(QString,Qt::CaseSensitivity)));
+    }
+
+    findDlg->show();
+    findDlg->raise();
+    findDlg->activateWindow();
+}
+
+void MainWindow::gotoCell()
+{
+    GotoCellDialog *dlg = new GotoCellDialog(this);
+    if(dlg->exec()){
+        QString str = dlg->GetString();
+        spreadsheet->setCurrentCell(str.mid(1).toInt() - 1,
+                                    str[0].unicode() - 'A');
+    }
+    delete dlg;
 }
